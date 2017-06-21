@@ -166,7 +166,7 @@ $(BUILD)/%.bnr: $(BANNER_IMAGE) $(BANNER_AUDIO)
 	$(BANNERTOOL) makebanner $(BANNER_IMAGE_ARG) $(BANNER_IMAGE) $(BANNER_AUDIO_ARG) $(BANNER_AUDIO) -o $@
 
 $(BUILD)/%.icn: $(ICON)
-	$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i $(ICON) -f nosavebackups -o $@
+	$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i $(ICON) -f visible,nosavebackups -o $@
 
 #---------------------------------------------------------------------------------
 else
