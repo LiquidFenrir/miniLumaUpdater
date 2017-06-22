@@ -104,11 +104,6 @@ Result downloadToFile(const char * url, const char * filepath)
 		return DL_ERROR_CONFIG;
 	}
 	
-	if (filepath == NULL) {
-		printf("Download cannot start, file path in config.json is blank.\n");
-		return DL_ERROR_CONFIG;
-	}
-	
 	printf("Downloading file from:\n%s\nto:\n%s\n", url, filepath);
 	
 	httpcContext context;
