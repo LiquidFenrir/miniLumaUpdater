@@ -100,7 +100,7 @@ Result setupContext(httpcContext * context, const char * url, u32 * size)
 Result downloadToFile(const char * url, const char * filepath)
 {
 	if (url == NULL) {
-		printf("Download cannot start, the URL in config.json is blank.\n");
+		printf("Download cannot start, the URL is blank.\n");
 		return DL_ERROR_CONFIG;
 	}
 	
