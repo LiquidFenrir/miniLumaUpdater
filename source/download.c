@@ -64,18 +64,6 @@ Result setupContext(httpcContext * context, const char * url, u32 * size)
 		
 		httpcCloseContext(context); // Close this context before we try the next
 		
-		if (newurl[0] == '/') { //if the url starts with a slash, it's local
-			int slashpos = 0;
-			char * domainname = strdup(url);
-			if (strncmp("http", domainname, 4) == 0) slashpos = 8; //if the url in the entry starts with http:// or https:// we need to skip that
-			slashpos = strchr(domainname+slashpos, '/')-domainname;
-			domainname[slashpos] = '\0'; // replace the slash with a nullbyte to cut the url
-			char * copyurl = strdup(newurl);
-			sprintf(newurl, "%s%s", domainname, copyurl);
-			free(copyurl);
-			free(domainname);
-		}
-		
 		ret = setupContext(context, newurl, size);
 		free(newurl);
 		return ret;
