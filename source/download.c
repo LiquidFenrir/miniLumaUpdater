@@ -76,7 +76,6 @@ Result setupContext(httpcContext * context, const char * url, u32 * size)
 			free(domainname);
 		}
 		
-		printf("Redirecting to url:\n%s\n", newurl);
 		ret = setupContext(context, newurl, size);
 		free(newurl);
 		return ret;

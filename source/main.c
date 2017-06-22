@@ -6,9 +6,7 @@ int main()
 	gfxInitDefault();
 	httpcInit(0);
 	
-	PrintConsole topScreen, bottomScreen;
-	consoleInit(GFX_TOP, &topScreen);
-	consoleInit(GFX_BOTTOM, &bottomScreen);
+	consoleInit(GFX_TOP, NULL);
 	
 	printf("Welcome to the automated Luma3DS updater!\n");
 	
