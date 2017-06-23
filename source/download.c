@@ -1,5 +1,8 @@
 #include "download.h"
 
+#include "cybertrust.h"
+#include "digicert.h"
+
 Result setupContext(httpcContext * context, const char * url, u32 * size)
 {
 	Result ret = 0;
@@ -19,14 +22,21 @@ Result setupContext(httpcContext * context, const char * url, u32 * size)
 		return ret;
 	}
 	
-	ret = httpcSetSSLOpt(context, SSLCOPT_DisableVerify);
+	ret = httpcAddRequestHeaderField(context, "Connection", "Keep-Alive");
 	if (ret != 0) {
-		printf("Error in:\nhttpcSetSSLOpt\n");
+		printf("Error in:\nhttpcAddRequestHeaderField\n");
 		httpcCloseContext(context);
 		return ret;
 	}
 	
-	ret = httpcAddRequestHeaderField(context, "Connection", "Keep-Alive");
+	ret = httpcAddTrustedRootCA(context, cybertrust_cer, cybertrust_cer_len);
+	if (ret != 0) {
+		printf("Error in:\nhttpcAddRequestHeaderField\n");
+		httpcCloseContext(context);
+		return ret;
+	}
+	
+	ret = httpcAddTrustedRootCA(context, digicert_cer, digicert_cer_len);
 	if (ret != 0) {
 		printf("Error in:\nhttpcAddRequestHeaderField\n");
 		httpcCloseContext(context);

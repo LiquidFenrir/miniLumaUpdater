@@ -9,24 +9,28 @@ endif
 TOPDIR ?= $(CURDIR)
 include $(DEVKITARM)/3ds_rules
 
-APP_TITLE       := miniLumaUpdater
-APP_DESCRIPTION := Automatic updater for Luma3DS
-APP_AUTHOR      := astronautlevel and LiquidFenrir
+APP_TITLE        :=  miniLumaUpdater
+APP_DESCRIPTION  :=  Automatic updater for Luma3DS
+APP_AUTHOR       :=  astronautlevel and LiquidFenrir
 
-ICON            := icon.png
+TARGET           :=  $(notdir $(CURDIR))
+OUTDIR           :=  out
+BUILD            :=  build
+SOURCES          :=  source source/7z
+INCLUDES         :=  certs
+RESOURCES        :=  resources
 
-PRODUCT_CODE := CTR-P-LMUP
-UNIQUE_ID    := 0x18590
+ICON             :=  $(RESOURCES)/icon.png
+ICON_FLAGS       :=  visible,nosavebackups
 
-BANNER_AUDIO := audio.wav
-BANNER_IMAGE := banner.png
+BANNER_AUDIO     :=  $(RESOURCES)/audio.wav
+BANNER_IMAGE     :=  $(RESOURCES)/banner.png
 
-TARGET		:=	$(notdir $(CURDIR))
-BUILD		:=	build
-SOURCES		:=	source source/7z
-DATA		:=	data
-INCLUDES	:=	include
-#ROMFS		:=	romfs
+RSF_PATH         :=  $(RESOURCES)/app.rsf
+PRODUCT_CODE     :=  CTR-P-LMUP
+UNIQUE_ID        :=  0x01859
+
+NO_SMDH          :=  true
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -60,7 +64,7 @@ LIBDIRS	:= $(CTRULIB)
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
 
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
+export OUTPUT	:=	$(CURDIR)/$(OUTDIR)/$(TARGET)
 export TOPDIR	:=	$(CURDIR)
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
@@ -109,11 +113,11 @@ ifeq ($(strip $(ICON)),)
 		endif
 	endif
 else
-	export APP_ICON := $(TOPDIR)/$(ICON)
+	export APP_ICON := $(ICON)
 endif
 
 ifeq ($(strip $(NO_SMDH)),)
-	export _3DSXFLAGS += --smdh=$(CURDIR)/$(TARGET).smdh
+	export _3DSXFLAGS += --smdh=$(OUTPUT).smdh
 endif
 
 ifneq ($(ROMFS),)
@@ -125,30 +129,30 @@ endif
 #---------------------------------------------------------------------------------
 3dsx: $(BUILD)
 
-cia : $(TARGET).cia
+cia : $(OUTPUT).cia
 
 all: 3dsx cia
 
 $(BUILD):
-	@[ -d $@ ] || mkdir -p $@
+	@mkdir -p $(OUTDIR)
+	@[ -d "$@" ] || mkdir -p "$@"
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).cia $(TARGET).3dsx $(OUTPUT).smdh $(OUTPUT).elf
+	@rm -fr $(BUILD) $(OUTDIR)
 
 #---------------------------------------------------------------------------------
 
-MAKEROM ?= makerom
+MAKEROM	?=	makerom
 
-$(TARGET).cia: $(OUTPUT).elf $(BUILD)/banner.bnr $(BUILD)/icon.icn
-	
-	$(MAKEROM) -f cia -o $@ -elf $< -rsf $(CURDIR)/app.rsf -target t -exefslogo -banner $(word 2,$^) -icon $(word 3,$^) -DAPP_TITLE="$(APP_TITLE)" -DAPP_PRODUCT_CODE="$(PRODUCT_CODE)" -DAPP_UNIQUE_ID="$(UNIQUE_ID)"
+%.cia: $(OUTPUT).elf $(BUILD)/banner.bnr $(BUILD)/icon.icn
+	$(MAKEROM) -f cia -o "$@" -elf "$(OUTPUT).elf" -rsf "$(RSF_PATH)" -target t -exefslogo -banner "$(BUILD)/banner.bnr" -icon "$(BUILD)/icon.icn" -DAPP_TITLE="$(APP_TITLE)" -DAPP_PRODUCT_CODE="$(PRODUCT_CODE)" -DAPP_UNIQUE_ID="$(UNIQUE_ID)"
 
 # Banner
 
-BANNERTOOL ?= bannertool
+BANNERTOOL	?=	bannertool
 
 ifeq ($(suffix $(BANNER_IMAGE)),.cgfx)
 	BANNER_IMAGE_ARG := -ci
@@ -162,11 +166,11 @@ else
 	BANNER_AUDIO_ARG := -a
 endif
 
-$(BUILD)/%.bnr: $(BANNER_IMAGE) $(BANNER_AUDIO)
-	$(BANNERTOOL) makebanner $(BANNER_IMAGE_ARG) $(BANNER_IMAGE) $(BANNER_AUDIO_ARG) $(BANNER_AUDIO) -o $@
+$(BUILD)/%.bnr	:	$(BANNER_IMAGE) $(BANNER_AUDIO)
+	$(BANNERTOOL) makebanner $(BANNER_IMAGE_ARG) "$(BANNER_IMAGE)" $(BANNER_AUDIO_ARG) "$(BANNER_AUDIO)" -o "$@"
 
-$(BUILD)/%.icn: $(ICON)
-	$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i $(ICON) -f visible,nosavebackups -o $@
+$(BUILD)/%.icn	:	$(ICON)
+	$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i "$(ICON)" -f "$(ICON_FLAGS)" -o "$@"
 
 #---------------------------------------------------------------------------------
 else
