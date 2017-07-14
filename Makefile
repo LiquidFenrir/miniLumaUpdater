@@ -21,14 +21,14 @@ INCLUDES         :=  certs
 RESOURCES        :=  resources
 
 ICON             :=  $(RESOURCES)/icon.png
-ICON_FLAGS       :=  visible,nosavebackups
+ICON_FLAGS       :=  visible,nosavebackups,recordusage
 
 BANNER_AUDIO     :=  $(RESOURCES)/audio.wav
 BANNER_IMAGE     :=  $(RESOURCES)/banner.png
 
 RSF_PATH         :=  $(RESOURCES)/app.rsf
 PRODUCT_CODE     :=  CTR-P-LMUP
-UNIQUE_ID        :=  0x01859
+UNIQUE_ID        :=  0x05859
 
 NO_SMDH          :=  true
 
@@ -166,10 +166,10 @@ else
 	BANNER_AUDIO_ARG := -a
 endif
 
-$(BUILD)/%.bnr	:	$(BANNER_IMAGE) $(BANNER_AUDIO)
+$(BUILD)/banner.bnr	:	$(BANNER_IMAGE) $(BANNER_AUDIO)
 	$(BANNERTOOL) makebanner $(BANNER_IMAGE_ARG) "$(BANNER_IMAGE)" $(BANNER_AUDIO_ARG) "$(BANNER_AUDIO)" -o "$@"
 
-$(BUILD)/%.icn	:	$(ICON)
+$(BUILD)/icon.icn	:	$(ICON)
 	$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" -l "$(APP_DESCRIPTION)" -p "$(APP_AUTHOR)" -i "$(ICON)" -f "$(ICON_FLAGS)" -o "$@"
 
 #---------------------------------------------------------------------------------
