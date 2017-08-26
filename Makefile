@@ -16,7 +16,7 @@ APP_AUTHOR       :=  astronautlevel and LiquidFenrir
 TARGET           :=  $(notdir $(CURDIR))
 OUTDIR           :=  out
 BUILD            :=  build
-SOURCES          :=  source source/7z
+SOURCES          :=  source source/7z source/minizip
 INCLUDES         :=  certs
 RESOURCES        :=  resources
 
@@ -48,13 +48,13 @@ CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lctru -lm
+LIBS	:= -lctru -lm -lz
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:= $(CTRULIB)
+LIBDIRS	:= $(CTRULIB) $(PORTLIBS)
 
 
 #---------------------------------------------------------------------------------

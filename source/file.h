@@ -11,4 +11,4 @@
 #define EXTRACTION_ERROR_OPEN_IN_ARCHIVE -7
 #define EXTRACTION_ERROR_READ_IN_ARCHIVE -8
 
-Result extractFileFromArchive(const char * archive_path, const char * filename, const char * filepath);
+Result extractFileFromArchive(const char * archive_path, const char * wanted, const char * outpath, bool zip);

@@ -96,12 +96,7 @@ Result setupContext(httpcContext * context, const char * url, u32 * size)
 }
 
 Result downloadToFile(const char * url, const char * filepath)
-{
-	if (url == NULL) {
-		printf("Download cannot start, the URL is blank.\n");
-		return DL_ERROR_CONFIG;
-	}
-	
+{	
 	printf("Downloading file from:\n%s\nto:\n%s\n", url, filepath);
 	
 	httpcContext context;
@@ -175,9 +170,9 @@ Result downloadLatestRelease(const char * filepath)
 	
 	char * tagstring = "\"browser_download_url\":\"";
 	char * endstring = "\"}";
-
+	
 	char *tagstart, *tagend;
-
+	
 	if ((tagstart = strstr(buf, tagstring)) != NULL) {
 		if ((tagend = strstr(tagstart, endstring)) != NULL) {
 			tagstart += strlen(tagstring);
